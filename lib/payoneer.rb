@@ -6,7 +6,10 @@ require 'nokogiri'
 require_relative 'payoneer/exception'
 
 class Payoneer
-  attr_reader :username, :password, :partner_id, :member_name
+  SANDBOX_API_URL = 'https://api.sandbox.payoneer.com/Payouts/HttpApi/API.aspx'
+  PRODUCTION_API_URL = 'https://api.payoneer.com/payouts/HttpAPI/API.aspx'
+
+  attr_reader :username, :password, :partner_id, :member_name, :sandbox
 
   class << self
     attr_writer :logger
@@ -27,8 +30,11 @@ class Payoneer
     end
   end
 
-  def initialize(partner_id, username, password)
-    @partner_id, @username, @password = partner_id, username, password
+  def initialize(partner_id:, username:, password:, sandbox: false)
+    @partner_id = partner_id
+    @username = username
+    @password = password
+    @sandbox = sandbox
   end
 
   def payee_signup_link(member_name)
@@ -151,7 +157,7 @@ class Payoneer
   end
 
   def api_url
-    ENV['PAYONEER_API_URL']
+    sandbox ? SANDBOX_API_URL : PRODUCTION_API_URL
   end
 
   def self.logger

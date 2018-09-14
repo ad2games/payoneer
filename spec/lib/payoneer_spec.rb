@@ -1,5 +1,12 @@
 describe Payoneer do
-  subject { Payoneer.new('x', 'y', 'z') }
+  subject do
+    Payoneer.new(
+      partner_id: 'x',
+      username: 'y',
+      password: 'z',
+      sandbox: true
+    )
+  end
 
   describe '#transfer_funds_args' do
     let(:time) { Time.new(2014, 10, 7, 16, 50, 10) }
