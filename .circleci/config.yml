@@ -1,0 +1,11 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/ruby:2.5.1
+        environment:
+          BUNDLE_PATH: vendor/bundle
+    steps:
+      - checkout
+      - run: bundle install
+      - run: bundle exec rspec
