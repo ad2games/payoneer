@@ -7,5 +7,19 @@ jobs:
           BUNDLE_PATH: vendor/bundle
     steps:
       - checkout
-      - run: bundle install
+
+      - restore_cache:
+          keys:
+            - gem-cache-{{ checksum ".ruby-version" }}-{{ checksum "Gemfile.lock" }}
+            - gem-cache-{{ checksum ".ruby-version" }}-
+
+      - run:
+          name: Install dependencies
+          command: bundle check || bundle install --jobs=4 --retry=3
+
+      - save_cache:
+          key: gem-cache-{{ checksum ".ruby-version" }}-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+
       - run: bundle exec rspec
